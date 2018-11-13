@@ -31,7 +31,7 @@ steps:
 - task: NuGet@2
   displayName: 'Pack'
   inputs:
-  command: pack
-  packagesToPack: 'Cache.Core/Cache.Core.csproj'
-  versioningScheme: byBuildNumber
-  includeSymbols: true
+    command: pack
+    packagesToPack: 'Cache.Core/Cache.Core.csproj'
+    versioningScheme: byBuildNumber
+    includeSymbols: true
