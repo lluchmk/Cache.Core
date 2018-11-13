@@ -27,12 +27,16 @@ steps:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: true 
 
 - task: NuGetCommand@2
   displayName: 'Pack'
   inputs:
     command: pack
     packagesToPack: 'Cache.Core/Cache.Core.csproj'
-    versioningScheme: byBuildNumber
-    name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
+    versioningScheme: byPrereleaseNumber
+    majorVersion: '0'
+    minorVersion: '1'
+    patchVersion: '0'
+    packTimezone: 'utc'
     includeSymbols: true
