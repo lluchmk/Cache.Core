@@ -13,25 +13,25 @@ pool:
 steps:
 
 - script: set
-    displayName: 'Show variables'
+  displayName: 'Show variables'
 
 - script: dotnet restore
-    displayName: 'Restore packages'
+  displayName: 'Restore packages'
 
 - script: dotnet build --configuration $(buildConfiguration) --no-restore
-    displayName: 'Build $(buildConfiguration)'
+  displayName: 'Build $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-    displayName: 'Test'
-    inputs:
-        command: Test
-        projects: '**/*Tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+  displayName: 'Test'
+  inputs:
+    command: Test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: NuGet@2
-    displayName: 'Pack'
-    inputs:
-        command: pack
-        packagesToPack: 'Cache.Core/Cache.Core.csproj'
-        versioningScheme: byBuildNumber
-        includeSymbols: true
+  displayName: 'Pack'
+  inputs:
+  command: pack
+  packagesToPack: 'Cache.Core/Cache.Core.csproj'
+  versioningScheme: byBuildNumber
+  includeSymbols: true
