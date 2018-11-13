@@ -2,13 +2,13 @@ name: lluchmk.Cache.Core NuGet pacakge
 
 # Run on commits on master branch
 trigger:
-    - master
+  - master
 
 variables:
-    buildConfiguration: Release
+  buildConfiguration: Release
 
 pool:
-    vmImage: 'Ubuntu 16.04'
+  vmImage: 'Ubuntu 16.04'
 
 steps:
 
