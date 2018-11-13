@@ -28,7 +28,7 @@ steps:
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 
-- task: NuGet@2
+- task: NuGetCommand@2
   displayName: 'Pack'
   inputs:
     command: pack
