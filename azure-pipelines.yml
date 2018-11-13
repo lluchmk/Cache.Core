@@ -34,4 +34,5 @@ steps:
     command: pack
     packagesToPack: 'Cache.Core/Cache.Core.csproj'
     versioningScheme: byBuildNumber
+    name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
     includeSymbols: true
