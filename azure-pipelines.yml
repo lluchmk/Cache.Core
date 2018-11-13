@@ -1,4 +1,5 @@
-name: lluchmk.Cache.Core NuGet pacakge
+#name: lluchmk.Cache.Core NuGet pacakge
+name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
 # Run on commits on master branch
 trigger:
@@ -34,9 +35,10 @@ steps:
   inputs:
     command: pack
     packagesToPack: 'Cache.Core/Cache.Core.csproj'
-    versioningScheme: byPrereleaseNumber
-    majorVersion: '0'
-    minorVersion: '1'
-    patchVersion: '0'
-    packTimezone: 'utc'
+    #versioningScheme: byPrereleaseNumber
+    #majorVersion: '0'
+    #minorVersion: '1'
+    #patchVersion: '0'
+    #packTimezone: 'utc'
+    versioningScheme: byBuildNumber
     includeSymbols: true
