@@ -41,4 +41,12 @@ steps:
     #patchVersion: '0'
     #packTimezone: 'utc'
     versioningScheme: byBuildNumber
-    includeSymbols: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'Publish to NuGet.org'
+  condition: and(succeedd(), eq(variables['Build.SourceBranchName'], 'master'))
+  inputs:
+    command: publish
+    nugetFeedType: external
+    publishFeedCredentials: 'NuGetOrg'
+    packagesToPus: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
