@@ -42,7 +42,7 @@ steps:
     #packTimezone: 'utc'
     versioningScheme: byBuildNumber
 
-- task: PublishBuildArtifact@1
+- task: PublishBuildArtifacts@1
   displayName: 'Store artifact'
   condition: succeeded()
   # If allowing more than one branch we could publish or deploy to different feeds
