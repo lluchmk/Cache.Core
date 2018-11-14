@@ -9,7 +9,7 @@ variables:
   buildConfiguration: Release
 
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'vs2017-win2016'
 
 steps:
 
@@ -42,3 +42,4 @@ steps:
     #packTimezone: 'utc'
     versioningScheme: byBuildNumber
     includeSymbols: true
+    packDestination: $(Build_ArtifactStagingDirectory)
