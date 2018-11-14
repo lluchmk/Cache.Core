@@ -43,10 +43,10 @@ steps:
     versioningScheme: byBuildNumber
 
 - task: DotNetCoreCLI@2
-  displayName: 'Publish to NuGet.org'
+  displayName: 'Push to NuGet.org'
   condition: and(succeedd(), eq(variables['Build.SourceBranchName'], 'master'))
   inputs:
-    command: publish
+    command: push
     nugetFeedType: external
     publishFeedCredentials: 'NuGetOrg'
     packagesToPus: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
