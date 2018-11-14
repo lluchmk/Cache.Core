@@ -42,11 +42,19 @@ steps:
     #packTimezone: 'utc'
     versioningScheme: byBuildNumber
 
-- task: NuGetCommand@2
-  displayName: 'Push to NuGet.org'
-  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+- task: PublishBuildArtifact@1
+  displayName: 'Store artifact'
+  condition: succeeded()
+  # If allowing more than one branch we could publish or deploy to different feeds
+  #condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
   inputs:
-    command: push
-    nugetFeedType: external
-    publishFeedCredentials: 'NuGetOrg'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+    artifactname: package
+
+#- task: NuGetCommand@2
+#  displayName: 'Push to NuGet.org'
+#  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+#  inputs:
+#    command: push
+#    nugetFeedType: external
+#    publishFeedCredentials: 'NuGetOrg'
+#    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
