@@ -48,7 +48,8 @@ steps:
   # If allowing more than one branch we could publish or deploy to different feeds
   #condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
   inputs:
-    artifactname: package
+    artifactname: 'NuGet package'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
 
 #- task: NuGetCommand@2
 #  displayName: 'Push to NuGet.org'
