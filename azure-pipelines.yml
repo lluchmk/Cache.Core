@@ -8,67 +8,75 @@ trigger:
 variables:
   buildConfiguration: Release
 
-pool:
-  vmImage: 'vs2017-win2016'
 
-steps:
+jobs:
 
-- script: set
-  displayName: 'Show variables'
+  -job: Build
+    pool:
+      vmImage: 'vs2017-win2016'
 
-- script: dotnet restore
-  displayName: 'Restore packages'
+    steps:
 
-- script: dotnet build --configuration $(buildConfiguration) --no-restore
-  displayName: 'Build $(buildConfiguration)'
+      - script: set
+        displayName: 'Show variables'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test'
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-    publishTestResults: true 
+      - script: dotnet restore
+        displayName: 'Restore packages'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Pack'
-  inputs:
-    command: pack
-    packagesToPack: 'Cache.Core/Cache.Core.csproj'
-    #versioningScheme: byPrereleaseNumber
-    #majorVersion: '0'
-    #minorVersion: '1'
-    #patchVersion: '0'
-    #packTimezone: 'utc'
-    versioningScheme: byBuildNumber
+      - script: dotnet build --configuration $(buildConfiguration) --no-restore
+        displayName: 'Build $(buildConfiguration)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Store artifact'
-  condition: succeeded()
-  # If allowing more than one branch we could publish or deploy to different feeds
-  #condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
-  inputs:
-    artifactname: 'NuGetPackage'
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+      - task: DotNetCoreCLI@2
+        displayName: 'Test'
+        inputs:
+          command: test
+          projects: '**/*Tests/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+          publishTestResults: true 
 
-# Moved to a release pipeline
-#- task: NuGetCommand@2
-#  displayName: 'Push to NuGet.org'
-#  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
-#  inputs:
-#    command: push
-#    nugetFeedType: external
-#    publishFeedCredentials: 'NuGetOrg'
-#    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+      - task: DotNetCoreCLI@2
+        displayName: 'Pack'
+        inputs:
+          command: pack
+          packagesToPack: 'Cache.Core/Cache.Core.csproj'
+          #versioningScheme: byPrereleaseNumber
+          #majorVersion: '0'
+          #minorVersion: '1'
+          #patchVersion: '0'
+          #packTimezone: 'utc'
+          versioningScheme: byBuildNumber
 
-- task: InvokeRESTAPI@1
-  inputs:
-    connectionType: connectedServiceName
-    genericEndpoint: SlackWebHook
-    method: POST
-    body: |
-      {
-        "text"= "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
-        Status: $(AGENT_JOBSTATUS)
-        <https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
-      }
+      - task: PublishBuildArtifacts@1
+        displayName: 'Store artifact'
+        condition: succeeded()
+        # If allowing more than one branch we could publish or deploy to different feeds
+        #condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+        inputs:
+          artifactname: 'NuGetPackage'
+          pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+
+      # Moved to a release pipeline
+      #- task: NuGetCommand@2
+      #  displayName: 'Push to NuGet.org'
+      #  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+      #  inputs:
+      #    command: push
+      #    nugetFeedType: external
+      #    publishFeedCredentials: 'NuGetOrg'
+      #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+
+  -job: Notify
+
+    steps: 
+
+      - task: InvokeRESTAPI@1
+        inputs:
+          connectionType: connectedServiceName
+          genericEndpoint: SlackWebHook
+          method: POST
+          body: |
+            {
+              "text"= "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
+              Status: $(AGENT_JOBSTATUS)
+              <https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
+            }
