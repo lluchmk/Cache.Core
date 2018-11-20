@@ -51,6 +51,7 @@ steps:
     artifactname: 'NuGetPackage'
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
 
+# Moved to a release pipeline
 #- task: NuGetCommand@2
 #  displayName: 'Push to NuGet.org'
 #  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
@@ -59,3 +60,15 @@ steps:
 #    nugetFeedType: external
 #    publishFeedCredentials: 'NuGetOrg'
 #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+
+- task: InvokeRESTAPI@1
+  inputs:
+    connectionType: connectedServiceName
+    genericEndpoint: SlackWebHook
+    method: POST
+    body: |
+      {
+        "text"= "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
+        Status: $(AGENT_JOBSTATUS)
+        <https://https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
+      }
