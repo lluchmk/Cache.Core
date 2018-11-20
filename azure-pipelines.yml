@@ -70,5 +70,5 @@ steps:
       {
         "text"= "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
         Status: $(AGENT_JOBSTATUS)
-        <https://https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
+        <https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
       }
