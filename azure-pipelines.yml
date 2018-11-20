@@ -8,15 +8,11 @@ trigger:
 variables:
   buildConfiguration: Release
 
-
 jobs:
-
   -job: Build
     pool:
       vmImage: 'vs2017-win2016'
-
     steps:
-
       - script: set
         displayName: 'Show variables'
 
@@ -66,9 +62,8 @@ jobs:
       #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
 
   -job: Notify
-
+    dependsOn: Build
     steps: 
-
       - task: InvokeRESTAPI@1
         inputs:
           connectionType: connectedServiceName
