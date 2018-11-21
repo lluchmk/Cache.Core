@@ -66,13 +66,19 @@ jobs:
   pool: server
   steps: 
   - task: InvokeRESTAPI@1
+    env:
+      teamProject: $(SYSTEM_TEAMPROJECT)
+      buildNumber: $(BUILD_BUILDNUMBER)
+      jobStatus: $(AGENT_JOBSTATUS)
+      collectionUri: $(SYSTEM_COLLECTIONURI)
+      buildId: $(BUILD_BUILDID)
     inputs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
       method: POST
       body: |
         {
-          "text": "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
-          Status: $(AGENT_JOBSTATUS)
-          <$(SYSTEM_COLLECTIONURI)/$(SYSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
+          "text": "New build on $(teamProject): $(buildNumber).
+          Status: $(jobStatus)
+          <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
         }
