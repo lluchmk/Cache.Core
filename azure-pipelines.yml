@@ -72,7 +72,7 @@ jobs:
       method: POST
       body: |
         {
-          "text"= "New build on $(SYSTEM_TEAMPROJECT): $(BUILD_BUILDNUMBER).
-          Status: $(AGENT_JOBSTATUS)
-          <https://$(SYSTEM_COLLECTIONURI)/$(YSTEM_TEAMPROJECT)/_build/results?buildId=$(BUILD_BUILDID)&view=logs|Details>"
+          "text": "New build on variables['SYSTEM_TEAMPROJECT']: variables['BUILD_BUILDNUMBER'].
+          Status: variables['AGENT_JOBSTATUS']
+          <variables['SYSTEM_COLLECTIONURI']/variables['SYSTEM_TEAMPROJECT']/_build/results?buildId=variables['BUILD_BUILDID']&view=logs|Details>"
         }
