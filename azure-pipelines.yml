@@ -62,6 +62,7 @@ jobs:
   #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
 
 - job: Notify
+  server: false
   dependsOn: Build
   steps: 
   - task: InvokeRESTAPI@1
