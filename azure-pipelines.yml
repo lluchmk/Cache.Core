@@ -68,7 +68,7 @@ jobs:
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
-      genericEndpoint: SlackWebHook
+      serviceConnection: SlackWebHook
       method: POST
       body: |
         {
