@@ -63,7 +63,7 @@ jobs:
 
 - job: Notify
   dependsOn: Build
-  server: false
+  pool: server
   steps: 
   - task: InvokeRESTAPI@1
     inputs:
