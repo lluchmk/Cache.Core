@@ -76,9 +76,7 @@ jobs:
         Status: $(jobStatus)
         <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
       }
-  steps: 
-  - script: set
-    displayName: 'Show variables'    
+  steps:   
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
