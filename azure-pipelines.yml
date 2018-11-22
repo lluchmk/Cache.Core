@@ -72,13 +72,14 @@ jobs:
       jobStatus: $(AGENT_JOBSTATUS)
       collectionUri: $(SYSTEM_COLLECTIONURI)
       buildId: $(BUILD_BUILDID)
-    inputs:
-      connectionType: connectedServiceName
-      serviceConnection: SlackWebHook
-      method: POST
-      body: |
+      message: |
         {
           "text": "New build on $(teamProject): $(buildNumber).
           Status: $(jobStatus)
           <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
         }
+    inputs:
+      connectionType: connectedServiceName
+      serviceConnection: SlackWebHook
+      method: POST
+      body: $(message)
