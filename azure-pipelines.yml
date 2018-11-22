@@ -64,20 +64,22 @@ jobs:
 - job: Notify
   dependsOn: Build
   pool: server
+  variables:
+    teamProject: $(SYSTEM_TEAMPROJECT)
+    buildNumber: $(BUILD_BUILDNUMBER)
+    jobStatus: $(AGENT_JOBSTATUS)
+    collectionUri: $(SYSTEM_COLLECTIONURI)
+    buildId: $(BUILD_BUILDID)
+    message: |
+    {
+        "text": "New build on $(teamProject): $(buildNumber).
+        Status: $(jobStatus)
+        <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
+    }
   steps: 
+  - script: set
+    displayName: 'Show variables'    
   - task: InvokeRESTAPI@1
-    env:
-      teamProject: $(SYSTEM_TEAMPROJECT)
-      buildNumber: $(BUILD_BUILDNUMBER)
-      jobStatus: $(AGENT_JOBSTATUS)
-      collectionUri: $(SYSTEM_COLLECTIONURI)
-      buildId: $(BUILD_BUILDID)
-      message: |
-        {
-          "text": "New build on $(teamProject): $(buildNumber).
-          Status: $(jobStatus)
-          <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
-        }
     inputs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
