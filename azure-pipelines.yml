@@ -88,4 +88,4 @@ jobs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
       method: POST
-      body: $(longvar)
+      body: $(message)
