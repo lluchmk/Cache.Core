@@ -81,16 +81,9 @@ jobs:
     "my.dotted.var": dotted var value
     "my var with spaces": var with spaces value
   steps:
-  - script: echo Input macro = $(mySimpleVar). Env var = %MYSIMPLEVAR%
-    condition: eq(variables['agent.os'], 'Windows_NT')
-  - script: echo Input macro = $(mySimpleVar). Env var = $MYSIMPLEVAR
-    condition: in(variables['agent.os'], 'Darwin', 'Linux')
-  - bash: echo Input macro = $(my.dotted.var). Env var = $MY_DOTTED_VAR
-  - powershell: Write-Host "Input macro = $(my var with spaces). Env var = $env:MY_VAR_WITH_SPACES"
-
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
       method: POST
-      body: $(message)
+      body: $(mySimpleVar)
