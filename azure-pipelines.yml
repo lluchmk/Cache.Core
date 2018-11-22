@@ -71,11 +71,11 @@ jobs:
     collectionUri: $(SYSTEM_COLLECTIONURI)
     buildId: $(BUILD_BUILDID)
     message: |
-    {
+      {
         "text": "New build on $(teamProject): $(buildNumber).
         Status: $(jobStatus)
         <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
-    }
+      }
   steps: 
   - script: set
     displayName: 'Show variables'    
