@@ -77,7 +77,7 @@ jobs:
         <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
       }
   steps:
-  - script: echo teamProject: $(teamProject)
+  - script: echo teamProject= $(teamProject)
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
