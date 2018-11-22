@@ -80,10 +80,12 @@ jobs:
     mySimpleVar: simple var value
     "my.dotted.var": dotted var value
     "my var with spaces": var with spaces value
+    longvar: |
+      asdasfeesacsdas
   steps:
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
       method: POST
-      body: $(mySimpleVar)
+      body: $(longvar)
