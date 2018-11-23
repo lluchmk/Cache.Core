@@ -4,7 +4,6 @@ name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 # Run on commits on master branch
 trigger:
   - master
-  - yaml_pipeline
 
 variables:
   buildConfiguration: Release
