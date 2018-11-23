@@ -51,10 +51,16 @@ jobs:
     inputs:
       artifactname: 'NuGetPackage'
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-  - powershell: echo "##vso[task.setvariable variable=notificationBody;isOutput=true]"New build on $env:SYSTEM_TEAMPROJECT -> $env:BUILD_BUILDNUMBER.`nStatus -> $env:AGENT_JOBSTATUS`n<$env:SYSTEM_COLLECTIONURI/$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID"&"view=logs|Details>""
-    name: setMessage
-  - script: echo $(setMessage.notificationBody)
-    name: showVar
+  - powershell: echo "##vso[task.setvariable variable=teamProject;isOutput=true]$env:SYSTEM_TEAMPROJECT"
+    name: setTeamProject
+  - powershell: echo "##vso[task.setvariable variable=buildNumber;isOutput=true]$env:BUILD_BUILDNUMBER"
+    name: setBuildNumber
+  - powershell: echo "##vso[task.setvariable variable=jobStatus;isOutput=true]$env:AGENT_JOBSTATUS"
+    name: setJobStatus
+  - powershell: echo "##vso[task.setvariable variable=collectionUri;isOutput=true]$env:SYSTEM_COLLECTIONURI"
+    name: setCollectionUri
+  - powershell: echo "##vso[task.setvariable variable=buildId;isOutput=true]$env:BUILD_BUILDID"
+    name: setBuildId
 
   # Moved to a release pipeline
   #- task: NuGetCommand@2
@@ -68,17 +74,18 @@ jobs:
 
 - job: Notify
   dependsOn: Build
-  #condition: succeeded()
   pool: server
   variables:
-    teamProject: $(SYSTEM_TEAMPROJECT)
-    buildNumber: $(BUILD_BUILDNUMBER)
-    jobStatus: $(AGENT_JOBSTATUS)
-    collectionUri: $(SYSTEM_COLLECTIONURI)
-    buildId: $(BUILD_BUILDID)
+    teamProject: $[ dependencies.Build.outputs['setTeamProject.teamProject'] ]
+    buildNumber: $[ dependencies.Build.outputs['setBuildNumber.buildNumber'] ]
+    jobStatus: $[ dependencies.Build.outputs['setJobStatus.jobStatus'] ]
+    collectionUri: $[ dependencies.Build.outputs['setCollectionUri.collectionUri'] ]
+    buildId: $[ dependencies.Build.outputs['setBuildId.buildId'] ]
     message: |
       {
-        "text": $[ dependencies.Build.outputs['setMessage.notificationBody'] ]
+        "text": "New build on $(teamProject): $(buildNumber).
+        Status: $(jobStatus)
+        <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
       }
     mySimpleVar: simple var value
     "my.dotted.var": dotted var value
