@@ -82,20 +82,16 @@ jobs:
     collectionUri: $[ dependencies.Build.outputs['setCollectionUri.collectionUri'] ]
     buildId: $[ dependencies.Build.outputs['setBuildId.buildId'] ]
     message: |
-      {
-        "text": "New build on $(teamProject): $(buildNumber).
-        Status: $(jobStatus)
-        <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
-      }
-    mySimpleVar: simple var value
-    "my.dotted.var": dotted var value
-    "my var with spaces": var with spaces value
-    longvar: |
-      asdasfeesacsdas
+      "New build on $(teamProject): $(buildNumber).
+      Status: $(jobStatus)
+      <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
   steps:
   - task: InvokeRESTAPI@1
     inputs:
       connectionType: connectedServiceName
       serviceConnection: SlackWebHook
       method: POST
-      body: $(message)
+      body: |
+        {
+          "text": $(message)
+        }
