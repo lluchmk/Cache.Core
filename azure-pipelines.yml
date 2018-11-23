@@ -57,7 +57,7 @@ jobs:
       echo "##vso[task.setvariable variable=jobStatus;isOutput=true]$env:AGENT_JOBSTATUS"
       echo "##vso[task.setvariable variable=collectionUri;isOutput=true]$env:SYSTEM_COLLECTIONURI"
       echo "##vso[task.setvariable variable=buildId;isOutput=true]$env:BUILD_BUILDID"
-    name setOutputVars
+    name: setOutputVars
 
   # Moved to a release pipeline
   #- task: NuGetCommand@2
