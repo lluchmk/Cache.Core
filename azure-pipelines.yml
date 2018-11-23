@@ -51,7 +51,7 @@ jobs:
     inputs:
       artifactname: 'NuGetPackage'
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-  - powershell: echo "##vso[task.setvariable variable=notificationBody;isOutput=true]New build on $env:SYSTEM_TEAMPROJECT -> $env:BUILD_BUILDNUMBER.\nStatus: $env:AGENT_JOBSTATUS\n<$env:SYSTEM_COLLECTIONURI/$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&view=logs|Details>"
+  - powershell: echo "##vso[task.setvariable variable=notificationBody;isOutput=true]New build on $env:SYSTEM_TEAMPROJECT -> $env:BUILD_BUILDNUMBER.\nStatus -> $env:AGENT_JOBSTATUS\n<$env:SYSTEM_COLLECTIONURI/$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&view=logs|Details>"
     name: setMessage
   - script: echo $(setMessage.notificationBody)
     name: showVar
