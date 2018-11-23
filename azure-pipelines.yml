@@ -56,6 +56,8 @@ jobs:
       Status: $env:AGENT_JOBSTATUS
       <$env:SYSTEM_COLLECTIONURI/$env:SYSTEM_TEAMPROJECT/_build/results?buildId=$env:BUILD_BUILDID&view=logs|Details>"
     name: setMessage
+  - script: echo $(setMessage.notificationBody)
+    name: showVar
 
   # Moved to a release pipeline
   #- task: NuGetCommand@2
