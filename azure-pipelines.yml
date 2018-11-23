@@ -67,7 +67,7 @@ jobs:
   #    publishFeedCredentials: 'NuGetOrg'
   #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
 
-- job: Notify sucess
+- job: Notify
   dependsOn: Build
   #condition: succeeded()
   pool: server
