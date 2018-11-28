@@ -22,13 +22,13 @@ jobs:
   - script: dotnet build --configuration $(buildConfiguration) --no-restore
     displayName: 'Build $(buildConfiguration)'
 
-#  - task: DotNetCoreCLI@2
-#    displayName: 'Test'
-#    inputs:
-#      command: test
-#      projects: '**/*Tests/*.csproj'
-#      arguments: '--configuration $(buildConfiguration)'
-#      publishTestResults: true 
+  - task: DotNetCoreCLI@2
+    displayName: 'Test'
+    inputs:
+      command: test
+      projects: '**/*Tests/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'
+      publishTestResults: true 
 
   - task: DotNetCoreCLI@2
     displayName: 'Pack'
