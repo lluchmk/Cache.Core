@@ -52,6 +52,7 @@ jobs:
     inputs:
       artifactname: 'NuGetPackage'
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+
   - powershell: |
       echo "##vso[task.setvariable variable=teamProject;isOutput=true]$env:SYSTEM_TEAMPROJECT"
       echo "##vso[task.setvariable variable=buildNumber;isOutput=true]$env:BUILD_BUILDNUMBER"
@@ -59,6 +60,13 @@ jobs:
       echo "##vso[task.setvariable variable=collectionUri;isOutput=true]$env:SYSTEM_COLLECTIONURI"
       echo "##vso[task.setvariable variable=buildId;isOutput=true]$env:BUILD_BUILDID"
     name: setOutputVars
+    condition: succeeded()
+
+  - task: Npm@1
+    condition: and(succeeded, eq(variables['Build.SourceBranchName'], 'master'))
+    inputs:
+      command: custom
+      customCommand: npx semantic-release
 
   # Moved to a release pipeline
   #- task: NuGetCommand@2
