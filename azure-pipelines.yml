@@ -4,6 +4,7 @@ name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 # Run on commits on master branch
 trigger:
   - master
+  - development
 
 variables:
   buildConfiguration: Release
@@ -32,6 +33,7 @@ jobs:
 
   - task: DotNetCoreCLI@2
     displayName: 'Pack'
+    condition: eq(variables['Build.SourceBranchName', 'master'])
     inputs:
       command: pack
       packagesToPack: 'Cache.Core/Cache.Core.csproj'
@@ -46,7 +48,7 @@ jobs:
     displayName: 'Store artifact'
     condition: succeeded()
     # If allowing more than one branch we could publish or deploy to different feeds
-    #condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'develop')))
     inputs:
       artifactname: 'NuGetPackage'
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
