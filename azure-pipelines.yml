@@ -97,17 +97,20 @@ jobs:
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
 
   - powershell: |
+      echo "##vso[task.setvariable variable=teamProject;isOutput=true]$env:SYSTEM_TEAMPROJECT"
+      echo "##vso[task.setvariable variable=collectionUri;isOutput=true]$env:SYSTEM_COLLECTIONURI"
+      echo "##vso[task.setvariable variable=buildId;isOutput=true]$env:BUILD_BUILDID"
       echo "##vso[task.setvariable variable=jobStatus;isOutput=true]$env:AGENT_JOBSTATUS"
       echo "##vso[task.setvariable variable=versionNumber;isOutput=true]$(nextRelease)"
     name: setOutputVars
     
-- job: Notify
+- job: NotifyVersion
   dependsOn: Pack
   pool: server
   variables:
-    teamProject: $[ dependencies.Build.outputs['setOutputVars.teamProject'] ]
-    collectionUri: $[ dependencies.Build.outputs['setOutputVars.collectionUri'] ]
-    buildId: $[ dependencies.Build.outputs['setOutputVars.buildId'] ]
+    teamProject: $[ dependencies.Pack.outputs['setOutputVars.teamProject'] ]
+    collectionUri: $[ dependencies.Pack.outputs['setOutputVars.collectionUri'] ]
+    buildId: $[ dependencies.Pack.outputs['setOutputVars.buildId'] ]
     jobStatus: $[ dependencies.Pack.outputs['setOutputVars.jobStatus'] ]
     versionNumber: $[ dependencies.Pack.outputs['setOutputVars.versionNumber'] ]
     message: |
