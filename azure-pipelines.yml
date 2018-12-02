@@ -78,11 +78,11 @@ jobs:
   dependsOn: Pack
   pool: server
   variables:
-    teamProject: $[ dependencies.Build.outputs['setOutputVars.teamProject'] ]
-    versionNumber: $[ dependencies.Build.outputs['setOutputVars.versionNumber'] ]
-    jobStatus: $[ dependencies.Build.outputs['setOutputVars.jobStatus'] ]
-    collectionUri: $[ dependencies.Build.outputs['setOutputVars.collectionUri'] ]
-    buildId: $[ dependencies.Build.outputs['setOutputVars.buildId'] ]
+    teamProject: $[ dependencies.Pack.outputs['setOutputVars.teamProject'] ]
+    versionNumber: $[ dependencies.Pack.outputs['setOutputVars.versionNumber'] ]
+    jobStatus: $[ dependencies.Pack.outputs['setOutputVars.jobStatus'] ]
+    collectionUri: $[ dependencies.Pack.outputs['setOutputVars.collectionUri'] ]
+    buildId: $[ dependencies.Pack.outputs['setOutputVars.buildId'] ]
     message: |
       "New version on $(teamProject): $(versionNumber).
       Status: $(jobStatus)
