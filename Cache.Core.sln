@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cache.Core.Tests", "Cache.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{9652F732-E0C6-4D78-B120-453F2D77C840}"
 	ProjectSection(SolutionItems) = preProject
+		.releaserc.yml = .releaserc.yml
 		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
