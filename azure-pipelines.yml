@@ -1,7 +1,5 @@
-#name: lluchmk.Cache.Core NuGet pacakge
 name: $(BuildDefinitionName)_$(Year:yyyy).$(Month).$(DayOfMonth)$(Rev:.r)
 
-# Run on commits on master branch
 trigger:
   - master
   - development
@@ -31,64 +29,62 @@ jobs:
       arguments: '--configuration $(buildConfiguration)'
       publishTestResults: true 
 
+- job: Pack
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
+  pool:
+    vmImage: 'vs2017-win2016'
+  steps:
+  - script: set
+    displayName: 'Show variables'
+
+  - script: >
+      npx -p semantic-release
+      -p @semantic-release/changelog
+      -p @semantic-release/git
+      -p @semantic-release/exec
+      semantic-release
+    env: { GH_TOKEN: $(GitHubToken)}
+    displayName: 'Semantic release'
+
+  - script: echo $(nextRelease)
+    displayName: 'Show next version'
+
   - task: DotNetCoreCLI@2
     displayName: 'Pack'
-    condition: eq(variables['Build.SourceBranchName', 'master'])
     inputs:
       command: pack
       packagesToPack: 'Cache.Core/Cache.Core.csproj'
-      #versioningScheme: byPrereleaseNumber
-      #majorVersion: '0'
-      #minorVersion: '1'
-      #patchVersion: '0'
-      #packTimezone: 'utc'
-      versioningScheme: byBuildNumber
+      versioningScheme: byEnvVar
+      versionEnvVar: nextRelease
 
   - task: PublishBuildArtifacts@1
     displayName: 'Store artifact'
     condition: succeeded()
-    # If allowing more than one branch we could publish or deploy to different feeds
-    condition: and(succeeded(), or(eq(variables['Build.SourceBranchName'], 'master'), eq(variables['Build.SourceBranchName'], 'develop')))
     inputs:
       artifactname: 'NuGetPackage'
       pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
 
   - powershell: |
       echo "##vso[task.setvariable variable=teamProject;isOutput=true]$env:SYSTEM_TEAMPROJECT"
-      echo "##vso[task.setvariable variable=buildNumber;isOutput=true]$env:BUILD_BUILDNUMBER"
       echo "##vso[task.setvariable variable=jobStatus;isOutput=true]$env:AGENT_JOBSTATUS"
       echo "##vso[task.setvariable variable=collectionUri;isOutput=true]$env:SYSTEM_COLLECTIONURI"
       echo "##vso[task.setvariable variable=buildId;isOutput=true]$env:BUILD_BUILDID"
+      echo "##vso[task.setvariable variable=versionNumber;isOutput=true]$(nextRelease)"
     name: setOutputVars
     condition: succeeded()
-
-  - task: Npm@1
-    condition: and(succeeded, eq(variables['Build.SourceBranchName'], 'master'))
-    inputs:
-      command: custom
-      customCommand: npx semantic-release
-
-  # Moved to a release pipeline
-  #- task: NuGetCommand@2
-  #  displayName: 'Push to NuGet.org'
-  #  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'master'))
-  #  inputs:
-  #    command: push
-  #    nugetFeedType: external
-  #    publishFeedCredentials: 'NuGetOrg'
-  #    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
-
+    
 - job: Notify
-  dependsOn: Build
+  dependsOn: Pack
   pool: server
   variables:
     teamProject: $[ dependencies.Build.outputs['setOutputVars.teamProject'] ]
-    buildNumber: $[ dependencies.Build.outputs['setOutputVars.buildNumber'] ]
+    versionNumber: $[ dependencies.Build.outputs['setOutputVars.versionNumber'] ]
     jobStatus: $[ dependencies.Build.outputs['setOutputVars.jobStatus'] ]
     collectionUri: $[ dependencies.Build.outputs['setOutputVars.collectionUri'] ]
     buildId: $[ dependencies.Build.outputs['setOutputVars.buildId'] ]
     message: |
-      "New build on $(teamProject): $(buildNumber).
+      "New version on $(teamProject): $(versionNumber).
       Status: $(jobStatus)
       <$(collectionUri)/$(teamProject)/_build/results?buildId=$(buildId)&view=logs|Details>"
   steps:
