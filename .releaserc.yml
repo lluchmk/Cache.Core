@@ -5,7 +5,5 @@ plugins:
   - "@semantic-release/changelog"
   - "@semantic-release/github"
   - - "@semantic-release/git"
-    - message: "chore(release): ${nextRelease.version} [skip ci] ***NO_CI***\n\n${nextRelease.notes}"
-  - - "@semantic-release/exec"
-    - successCmd: |
-        echo '##vso[task.setvariable variable=nextRelease]${nextRelease.version}
+    - message: "chore(release): ${nextRelease.version} ***NO_CI***\n\n${nextRelease.notes}"
+  - "semantic-release-ado"
